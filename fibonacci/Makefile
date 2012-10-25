@@ -4,58 +4,59 @@
 ## Version: $Id: Makefile,v 0.0 2012/10/23 02:44:13 shell Exp $
 ## Keywords: 
 ## X-URL: 
-TARGET=test-c test-go test-cython test-rpython-c test-racket
+TARGET=fib-c fib-go fib_cython fib-rpython-c fib-racket
 
-all: c go py pypy guile racket
+all: c go lua python cython pypy rpython guile racket
 
 build: $(TARGET)
 
 clean:
-	rm -f *.pyc test-cython.c $(TARGET)
+	rm -f *.pyc fib_cython.c $(TARGET)
 
-test-c:
-	gcc -O2 -o test-c test-c.c
+fib-c:
+	gcc -O2 -o fib-c fib-c.c
 
-c: test-c
-	time ./test-c
+c: fib-c
+	time ./fib-c
 
-test-go:
-	go build test-go.go
+fib-go:
+	go build fib-go.go
 
-go: test-go
-	time ./test-go
+go: fib-go
+	time ./fib-go
 
 lua:
-	time lua test-lua.lua
+	time lua fib.lua
 
 python:
-	time python test-py.py
+	time python fib.py
 
-test-cython:
-	cython --embed test-cython.pyx
-	gcc $(shell python-config --includes) -O2 test-cython.c
-	gcc $(shell python-config --libs) -o $@ test-cython.o
+fib_cython.c: fib_cython.pyx
+	cython --embed $^
 
-cython: test-cython
-	time ./test-cython
+fib_cython: fib_cython.c
+	gcc $(shell python-config --includes) $(shell python-config --libs) -O2 -o $@ $^
+
+cython: fib_cython
+	time ./fib_cython
 
 pypy:
-	time pypy test-py.py
+	time pypy fib.py
 
-test-rpython-c:
-	translate.py test-rpython.py
+fib-rpython-c:
+	translate.py fib-rpython.py
 
-rpython: test-rpython-c
-	time ./test-rpython-c
+rpython: fib-rpython-c
+	time ./fib-rpython-c
 
 guile:
-	guild compile test-guile.scm
-	time guile test-guile.scm
+	guild compile lua.scm
+	time guile lua.scm
 
-test-racket:
-	raco exe test-racket.scm
+fib-racket:
+	raco exe fib-racket.scm
 
-racket: test-racket
-	time ./test-racket
+racket: fib-racket
+	time ./fib-racket
 
 ### Makefile ends here

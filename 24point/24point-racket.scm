@@ -2,8 +2,10 @@
 (define (chkexp target)
   (lambda (e v)
     (when (eq? v target)
-	  (write e)
-	  (newline))))
+      ;; (write e)
+      ;; (newline)
+      '()
+      )))
 
 (define (exchangeable op)
   (not (member op (list - /))))
@@ -20,7 +22,7 @@
 	   (for ((op ops))
 		(iter-all-exp f ops nss (list op e r) (op v r))
 		(unless (exchangeable op)
-			(iter-all-exp f ops nss (list op r e) (op r v)))))))
+		  (iter-all-exp f ops nss (list op r e) (op r v)))))))
    ))
 
 (for ((i (in-range 100)))
