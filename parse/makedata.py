@@ -8,7 +8,7 @@ import sys, random
 
 def main():
     with open(sys.argv[1], 'w') as fo:
-        for i in xrange(500000):
+        for i in xrange(1000000):
             fo.write('%d %d\n' % (i, random.randint(0, 10000)))
 
 if __name__ == '__main__': main()

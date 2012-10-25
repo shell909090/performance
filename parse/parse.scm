@@ -1,0 +1,12 @@
+(use-modules (ice-9 rdelim))
+(use-modules (ice-9 regex))
+(define reline (make-regexp "[0-9]+"))
+(define (grepfile filename)
+  (with-input-from-file	filename
+    (lambda ()
+      (do ((line (read-line) (read-line)))
+	  ((eof-object? line))
+	;; (map match:substring (list-matches reline line))
+	(list-matches reline line)
+	))))
+(grepfile "data.txt")

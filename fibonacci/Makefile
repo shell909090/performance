@@ -6,7 +6,7 @@
 ## X-URL: 
 TARGET=fib-c fib-go fib_cython fib-rpython-c fib-racket
 
-all: c go lua python cython pypy rpython guile racket
+all: c go lua python cython pypy rpython guile racket sbcl
 
 build: $(TARGET)
 
@@ -58,5 +58,8 @@ fib-racket:
 
 racket: fib-racket
 	time ./fib-racket
+
+sbcl:
+	time sbcl --script fib.lisp
 
 ### Makefile ends here
