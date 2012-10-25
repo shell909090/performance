@@ -1,0 +1,36 @@
+;; wrong program
+(define (chkexp target)
+  (lambda (e v)
+    (when (eq? v target)
+      ;; (write e)
+      ;; (newline)
+      '()
+      )))
+
+(define (exchangeable op)
+  (not (member op (list - /))))
+
+(define (iter-all-exp f ops ns e v)
+  (cond
+   ((null? ns) (f e v))
+   ((null? e)
+    (do ((nns (remove-duplicates ns) (cdr nns))
+	 (r (car nns) (car nns)))
+	(null? nns)
+      (iter-all-exp f ops (remove r ns) r r)))
+   (else
+    (do ((nns (remove-duplicates ns) (cdr nns))
+	 (r (car nns) (car nns)))
+	(null? nss)
+      (let ((nss (remove r ns)))
+	(do ((oop ops (cdr ops))
+	     (op (car ops) (car ops)))
+	    (null? ops)
+	  (iter-all-exp f ops nss (list op e r) (op v r))
+	  (unless (exchangeable op)
+	    (iter-all-exp f ops nss (list op r e) (op r v)))))))
+   ))
+
+(do ((i 0 (+1 i)))
+    (< i 100)
+  (iter-all-exp (chkexp 24) (list + - * /) (list 3 4 6 8) '() 0))

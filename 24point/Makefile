@@ -4,14 +4,14 @@
 ## Version: $Id: Makefile,v 0.0 2012/10/23 08:40:13 shell Exp $
 ## Keywords: 
 ## X-URL: 
-TARGET=24point-go 24point-racket
+TARGET=24point-go 24point-racket 24point_cython
 
-all: go racket sbcl lua python
+all: go lua python  racket sbcl
 
 build: $(TARGET)
 
 clean:
-	rm -f $(TARGET)
+	rm -f 24point_cython.c $(TARGET)
 
 24point-go:
 	go build 24point-go.go
@@ -19,19 +19,37 @@ clean:
 go: 24point-go
 	time ./24point-go
 
+# wrong algorithm
+lua:
+	time lua 24point.lua
+
+python:
+	time python 24point.py
+
+24point_cython.c: 24point_cython.pyx
+	cython --embed $^
+
+24point_cython: 24point_cython.c
+	gcc $(shell python-config --includes) $(shell python-config --libs) -O2 -o $@ $^
+
+cython: 24point_cython
+	time ./24point_cython
+
+pypy:
+	time pypy 24point.py
+
+# wrong program with guile
+guile:
+	time guile 24point.scm
+
 24point-racket:
 	raco exe 24point-racket.scm
 
 racket: 24point-racket
 	time ./24point-racket
 
+# wrong algorithm
 sbcl:
 	time sbcl --script 24point-sbcl.lisp
-
-lua:
-	time lua 24point.lua
-
-python:
-	time python 24point.py
 
 ### Makefile ends here
