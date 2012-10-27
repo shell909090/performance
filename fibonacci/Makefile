@@ -13,23 +13,24 @@ build: $(TARGET)
 clean:
 	rm -f *.pyc fib_cython.c $(TARGET)
 
-fib-c:
-	gcc -O2 -o fib-c fib-c.c
+fib-c: fib-c.c
+	gcc -O2 -o $@ $^
 
 c: fib-c
-	time ./fib-c
+	../perf ./fib-c
 
-fib-go:
-	go build fib-go.go
+fib-go: fib-go.go
+	go build $^
+	chmod 755 $@
 
 go: fib-go
-	time ./fib-go
+	../perf ./fib-go
 
 lua:
-	time lua fib.lua
+	../perf lua fib.lua
 
 python:
-	time python fib.py
+	../perf python fib.py
 
 fib_cython.c: fib_cython.pyx
 	cython --embed $^
@@ -38,28 +39,28 @@ fib_cython: fib_cython.c
 	gcc $(shell python-config --includes) $(shell python-config --libs) -O2 -o $@ $^
 
 cython: fib_cython
-	time ./fib_cython
+	../perf ./fib_cython
 
 pypy:
-	time pypy fib.py
+	../perf pypy fib.py
 
 fib-rpython-c:
 	translate.py fib-rpython.py
 
 rpython: fib-rpython-c
-	time ./fib-rpython-c
+	../perf ./fib-rpython-c
 
 guile:
 	guild compile lua.scm
-	time guile lua.scm
+	../perf guile lua.scm
 
 fib-racket:
 	raco exe fib-racket.scm
 
 racket: fib-racket
-	time ./fib-racket
+	../perf ./fib-racket
 
 sbcl:
-	time sbcl --script fib.lisp
+	../perf sbcl --script fib.lisp
 
 ### Makefile ends here
