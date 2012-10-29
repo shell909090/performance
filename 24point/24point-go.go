@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt";
-	"sort";
-	"errors";
+	"fmt"
+	"sort"
+	"errors"
 	"strconv"
 )
 
@@ -20,11 +20,16 @@ func setable(numbers []int) (rslt []int) {
 }
 
 func do_op(op string, value1 float32, value2 float32) (rslt float32, err error) {
-     if op == "+" { return value1 + value2, nil }
-     if op == "-" { return value1 - value2, nil }
-     if op == "*" { return value1 * value2, nil }
-     if op == "/" { return value1 / value2, nil }
-     return 0, errors.New("unknown ops")
+	if op == "+" { return value1 + value2, nil }
+	if op == "-" { return value1 - value2, nil }
+	if op == "*" { return value1 * value2, nil }
+	if op == "/" { return value1 / value2, nil }
+	return 0, errors.New("unknown ops")
+}
+
+func exchangeable(op string) bool {
+	if op == "+" || op == "*" { return true }
+	return false
 }
 
 func iter_all(ops []string, exp string, value float32, numbers []int) (err error) {
@@ -53,13 +58,22 @@ func iter_all(ops []string, exp string, value float32, numbers []int) (err error
 			iter_all(ops, strconv.Itoa(n), float32(n), ns)
 		}else{
 			for _, op = range ops {
-			    v, err = do_op(op, value, float32(n))
-			    if err != nil {
-			       return
-			    }
-			    iter_all(ops,
-				strconv.Itoa(n) + op + "(" + exp + ")",
-				v, ns)
+				v, err = do_op(op, value, float32(n))
+				if err != nil {
+					return
+				}
+				iter_all(ops,
+					strconv.Itoa(n) + op + "(" + exp + ")",
+					v, ns)
+				if exchangeable(op) {
+					v, err = do_op(op, float32(n), value)
+					if err != nil {
+						return
+					}
+					iter_all(ops,
+						"(" + exp + ")" + op + strconv.Itoa(n),
+						v, ns)
+				}
 			}
 		}
 	}

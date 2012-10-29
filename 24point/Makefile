@@ -6,7 +6,7 @@
 ## X-URL: 
 TARGET=24point-go 24point-racket 24point_cython
 
-all: go lua python  racket sbcl
+all: go python cython pypy racket
 
 build: $(TARGET)
 
@@ -17,14 +17,14 @@ clean:
 	go build 24point-go.go
 
 go: 24point-go
-	time ./24point-go
+	../perf -t 10 ./24point-go
 
 # wrong algorithm
 lua:
-	time lua 24point.lua
+	../perf lua 24point.lua
 
 python:
-	time python 24point.py
+	../perf -t 10 python 24point.py
 
 24point_cython.c: 24point_cython.pyx
 	cython --embed $^
@@ -33,23 +33,23 @@ python:
 	gcc $(shell python-config --includes) $(shell python-config --libs) -O2 -o $@ $^
 
 cython: 24point_cython
-	time ./24point_cython
+	../perf -t 10 ./24point_cython
 
 pypy:
-	time pypy 24point.py
+	../perf -t 10 pypy 24point.py
 
 # wrong program with guile
 guile:
-	time guile 24point.scm
+	../perf guile 24point.scm
 
 24point-racket:
 	raco exe 24point-racket.scm
 
 racket: 24point-racket
-	time ./24point-racket
+	../perf -t 10 ./24point-racket
 
 # wrong algorithm
 sbcl:
-	time sbcl --script 24point-sbcl.lisp
+	../perf sbcl --script 24point-sbcl.lisp
 
 ### Makefile ends here

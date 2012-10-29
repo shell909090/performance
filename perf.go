@@ -29,7 +29,7 @@ func runprog(argv []string) (filesize int64, mem int64, err error) {
 
 	filesize = fi.Size()
 	stat, err = proc.Wait()
-	mem = stat.SysUsage().(*syscall.Rusage).Maxrss
+	mem = int64(stat.SysUsage().(*syscall.Rusage).Maxrss)
 	return
 }
 
@@ -55,5 +55,5 @@ func main () {
 	dur := time.Now().Sub(start)
 	mem = average(&mems)
 	fmt.Printf("filesize: %d kB, runtime: %0.3f s, memory: %d kB\n",
-		filesize / 1024, dur.Seconds() + 0.0005, mem)
+		filesize / 1024, (dur.Seconds() / float64(*t) + 0.0005), mem)
 }
