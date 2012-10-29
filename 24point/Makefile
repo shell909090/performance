@@ -13,8 +13,9 @@ build: $(TARGET)
 clean:
 	rm -f 24point_cython.c $(TARGET)
 
-24point-go:
-	go build 24point-go.go
+24point-go: 24point-go.go
+	go build $^
+	chmod 755 $@
 
 go: 24point-go
 	../perf -t 10 ./24point-go

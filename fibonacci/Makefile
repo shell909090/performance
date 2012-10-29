@@ -51,8 +51,8 @@ rpython: fib-rpython-c
 	../perf ./fib-rpython-c
 
 guile:
-	guild compile lua.scm
-	../perf guile lua.scm
+	guild compile fib.scm
+	../perf guile fib.scm
 
 fib-racket:
 	raco exe fib-racket.scm
