@@ -14,5 +14,4 @@
 	     (iter-all-exp f ops nss `(,op ,e ,r))
 	     (if (not (exchangeable op))
 		 (iter-all-exp f ops nss `(,op ,r ,e)))))))))
-(dotimes (i 100)
-  (iter-all-exp (chkexp 24) `(+ - * /) `(3 4 6 8)))
+(iter-all-exp (chkexp 24) `(+ - * /) `(3 4 5 6 7 8))

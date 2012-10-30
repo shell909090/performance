@@ -19,6 +19,13 @@ func setable(numbers []int) (rslt []int) {
 	return
 }
 
+func remove(numbers []int, n int) (rslt []int) {
+	i := sort.SearchInts(numbers, n)
+	rslt = append(rslt, numbers[:i]...)
+	rslt = append(rslt, numbers[i+1:]...)
+	return 
+}
+
 func do_op(op string, value1 float32, value2 float32) (rslt float32, err error) {
 	if op == "+" { return value1 + value2, nil }
 	if op == "-" { return value1 - value2, nil }
@@ -33,7 +40,7 @@ func exchangeable(op string) bool {
 }
 
 func iter_all(ops []string, exp string, value float32, numbers []int) (err error) {
-	var n, i int
+	var n int
 	var v float32
 	var op string
 	var ns []int
@@ -43,33 +50,18 @@ func iter_all(ops []string, exp string, value float32, numbers []int) (err error
 		return
 	}
 	
-	// TODO:
 	for _, n = range numbers {
-		ns = ns[:0]
-		flag := false
-		for _, i = range numbers {
-			if i != n || flag{
-				ns = append(ns, i)
-			}else{
-				flag = true
-			}
-		}
-		if exp == "" {
-			iter_all(ops, strconv.Itoa(n), float32(n), ns)
-		}else{
-			for _, op = range ops {
-				v, err = do_op(op, value, float32(n))
-				if err != nil {
-					return
-				}
+		ns = remove(numbers, n)
+		for _, op = range ops {
+			v, err = do_op(op, value, float32(n))
+			if err == nil { 
 				iter_all(ops,
 					strconv.Itoa(n) + op + "(" + exp + ")",
 					v, ns)
-				if exchangeable(op) {
-					v, err = do_op(op, float32(n), value)
-					if err != nil {
-						return
-					}
+			}
+			if exchangeable(op) {
+				v, err = do_op(op, float32(n), value)
+				if err == nil {
 					iter_all(ops,
 						"(" + exp + ")" + op + strconv.Itoa(n),
 						v, ns)
@@ -81,7 +73,11 @@ func iter_all(ops []string, exp string, value float32, numbers []int) (err error
 }
 
 func main() {
-     for i := 0; i < 100; i++ {
-     	 iter_all([]string{"+", "-", "*", "/"}, "", 0, []int{3,4,6,8})
-     }
+	var n int
+	var numbers = []int{3,4,5,6,7,8}
+	var opts = []string{"+", "-", "*", "/"}
+	fmt.Println(numbers)
+	for _, n = range setable(numbers) {
+     		iter_all(opts, strconv.Itoa(n), float32(n), remove(numbers, n))
+	}
 }

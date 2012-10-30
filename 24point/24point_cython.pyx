@@ -43,9 +43,8 @@ opts = [
     opt('/', lambda x, y: float(x)/y, 0),]
 
 if __name__ == '__main__':
-    for i in xrange(100):
-        ns = [3, 4, 6, 8]
-        for r in set(ns):
-            ns.remove(r)
-            iter_all_exp(chkexp(24), opts, ns, r, r)
-            ns.append(r)
+    ns = [3, 4, 5, 6, 7, 8]
+    for r in set(ns):
+        ns.remove(r)
+        iter_all_exp(chkexp(24), opts, ns, r, r)
+        ns.append(r)

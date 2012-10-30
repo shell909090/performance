@@ -27,9 +27,11 @@ def iter_all_exp(f, ops, ns, e, v):
     for r in set(ns):
         ns.remove(r)
         for op in ops:
-            iter_all_exp(f, ops, ns, (op, e, r), op(v, r))
-            if not op.exchangable:
-                iter_all_exp(f, ops, ns, (op, r, e), op(r, v))
+            try: iter_all_exp(f, ops, ns, (op, e, r), op(v, r))
+            except: continue
+            if op.exchangable:
+                try: iter_all_exp(f, ops, ns, (op, r, e), op(r, v))
+                except: continue
         ns.append(r)
 
 opts = [
@@ -39,9 +41,8 @@ opts = [
     opt('/', lambda x, y: float(x)/y, False),]
 
 if __name__ == '__main__':
-    for i in xrange(100):
-        ns = [3, 4, 6, 8]
-        for r in set(ns):
-            ns.remove(r)
-            iter_all_exp(chkexp(24), opts, ns, r, r)
-            ns.append(r)
+    ns = [3, 4, 5, 6, 7, 8]
+    for r in set(ns):
+        ns.remove(r)
+        iter_all_exp(chkexp(24), opts, ns, r, r)
+        ns.append(r)
