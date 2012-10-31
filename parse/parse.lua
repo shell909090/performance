@@ -5,6 +5,6 @@
 -- end
 
 r = require "rex_pcre".new("(\\d+) (\\d+)", 0)
-for line in io.lines("data.txt") do
-   r.match(r, line)
+for line in io.lines("mnt/data.txt") do
+    r.match(r, line)
 end

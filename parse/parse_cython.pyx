@@ -8,7 +8,7 @@ import re, sys
 
 reline = re.compile('(\d+) (\d+)')
 cdef int main():
-    with open('data.txt', 'r') as fi:
+    with open('mnt/data.txt', 'r') as fi:
         for line in fi: reline.match(line).groups()
 
 if __name__ == '__main__': main()

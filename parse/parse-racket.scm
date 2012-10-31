@@ -1,3 +1,4 @@
+#lang racket
 (define reline (regexp " +"))
 
 (define (grepfile filename)
@@ -7,4 +8,4 @@
 	  ((eof-object? line))
 	(regexp-split reline line)))))
 
-(grepfile "data.txt")
+(grepfile "mnt/data.txt")

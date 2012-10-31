@@ -17,14 +17,14 @@ fib-c: fib-c.c
 	gcc -O2 -o $@ $^
 
 c: fib-c
-	../perf ./fib-c
+	../perf -l c ./fib-c
 
 fib-go: fib-go.go
 	go build $^
 	chmod 755 $@
 
 go: fib-go
-	../perf ./fib-go
+	../perf -l go ./fib-go
 
 lua:
 	../perf lua fib.lua
@@ -39,7 +39,7 @@ fib_cython: fib_cython.c
 	gcc $(shell python-config --includes) $(shell python-config --libs) -O2 -o $@ $^
 
 cython: fib_cython
-	../perf ./fib_cython
+	../perf -l cython ./fib_cython
 
 pypy:
 	../perf pypy fib.py
@@ -48,17 +48,17 @@ fib-rpython-c:
 	translate.py fib-rpython.py
 
 rpython: fib-rpython-c
-	../perf ./fib-rpython-c
+	../perf -l rpython ./fib-rpython-c
 
 guile:
 	guild compile fib.scm
 	../perf guile fib.scm
 
-fib-racket:
-	raco exe fib-racket.scm
+fib-racket: fib-racket.scm
+	raco exe $^
 
 racket: fib-racket
-	../perf ./fib-racket
+	../perf -l racket ./fib-racket
 
 sbcl:
 	../perf sbcl --script fib.lisp

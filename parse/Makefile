@@ -4,29 +4,41 @@
 ## Version: $Id: Makefile,v 0.0 2012/10/23 07:21:26 shell Exp $
 ## Keywords: 
 ## X-URL: 
-TARGET=data.txt parse-go parse_cython
+TARGET=parse-go parse_cython parse-racket
 
-all: data.txt go
+all: grep go lua python cython pypy guile racket sbcl
 
-build: $(TARGET)
+build: mnt/data.txt $(TARGET)
 
-clean:
-	rm -f $(TARGET)
+clean: umount
+	rm -f *.c $(TARGET)
 
-data.txt:
-	python makedata.py data.txt
+mount:
+	mkdir mnt
+	sudo mount -t tmpfs nont mnt
 
-parse-go:
-	go build parse-go.go
+mnt/data.txt: mount
+	python makedata.py $@
 
-go: data.txt parse-go
-	time ./parse-go
+umount:
+	sudo umount mnt
+	rm -rf mnt
 
-lua: data.txt
-	time lua parse.lua
+grep:
+	../perf grep '\([0-9]\+\) \([0-9]\+\)' mnt/data.txt
 
-python: data.txt
-	time python parse.py
+parse-go: parse-go.go
+	go build $^
+	chmod 755 $@
+
+go: parse-go
+	../perf -l go ./parse-go
+
+lua:
+	../perf lua parse.lua
+
+python:
+	../perf python parse.py
 
 parse_cython.c: parse_cython.pyx
 	cython --embed $^
@@ -34,19 +46,23 @@ parse_cython.c: parse_cython.pyx
 parse_cython: parse_cython.c
 	gcc $(shell python-config --includes) $(shell python-config --libs) -O2 -o $@ $^
 
-cython: data.txt parse_cython
-	time ./parse_cython
+cython: parse_cython
+	../perf -l cython ./parse_cython
 
 pypy:
-	time pypy parse.py
+	../perf pypy parse.py
 
 guile:
-	time guile parse.scm
+	guild compile parse.scm
+	../perf guile parse.scm
 
-racket: data.txt
-	time racket -r parse-racket.scm
+parse-racket: parse-racket.scm
+	raco exe $^
 
-sbcl: data.txt
-	time sbcl --script parse.lisp
+racket: parse-racket
+	../perf -l racket ./parse_cython
+
+sbcl:
+	../perf sbcl --script parse.lisp mnt/data.txt
 
 ### Makefile ends here

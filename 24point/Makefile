@@ -18,7 +18,7 @@ clean:
 	chmod 755 $@
 
 go: 24point-go
-	../perf ./24point-go
+	../perf -l go ./24point-go
 
 lua:
 	../perf lua 24point.lua
@@ -33,7 +33,7 @@ python:
 	gcc $(shell python-config --includes) $(shell python-config --libs) -O2 -o $@ $^
 
 cython: 24point_cython
-	../perf ./24point_cython
+	../perf -l cython ./24point_cython
 
 pypy:
 	../perf pypy 24point.py
@@ -42,7 +42,7 @@ pypy:
 	raco exe 24point-racket.scm
 
 racket: 24point-racket
-	../perf ./24point-racket
+	../perf -l racket ./24point-racket
 
 sbcl:
 	../perf sbcl --script 24point.lisp

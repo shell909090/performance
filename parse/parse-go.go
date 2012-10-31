@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	f, _ := os.Open("data.txt")
+	f, _ := os.Open("mnt/data.txt")
 	r := bufio.NewReader(f)
 
 	rex, _ := regexp.Compile("(\\d+) (\\d+)")

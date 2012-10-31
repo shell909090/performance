@@ -43,8 +43,10 @@ func main () {
 	var filesize, mem int64
 	var mems []int64
 
-	t := flag.Int("t", 1, "give me your codes")
+	t := flag.Int("t", 1, "run times")
+	lang := flag.String("l", "--", "lang")
 	flag.Parse()
+	if *lang == "--" { lang = &(flag.Args()[0]) }
 	start := time.Now()
 
 	for i := 0; i < *t; i++ {
@@ -54,6 +56,6 @@ func main () {
 
 	dur := time.Now().Sub(start)
 	mem = average(&mems)
-	fmt.Printf("filesize: %d kB, runtime: %0.3f s, memory: %d kB\n",
-		filesize / 1024, (dur.Seconds() / float64(*t) + 0.0005), mem)
+	fmt.Printf("lang: %s, filesize: %d kB, runtime: %0.3f s, memory: %d kB\n",
+		*lang, filesize / 1024, (dur.Seconds() / float64(*t) + 0.0005), mem)
 }

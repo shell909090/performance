@@ -9,4 +9,4 @@
 	;; (map match:substring (list-matches reline line))
 	(list-matches reline line)
 	))))
-(grepfile "data.txt")
+(grepfile "mnt/data.txt")
