@@ -13,28 +13,18 @@ type Item struct {
 	data [2]int
 }
 
-type Items struct {
-	data []Item
-}
+type Items []Item
 
 func (is Items) Len() int {
-	return len(is.data)
+	return len(is)
 }
 
 func (is Items) Swap(i, j int) {
-	is.data[i], is.data[j] = is.data[j], is.data[i]
+	is[i], is[j] = is[j], is[i]
 }
 
 func (is Items) Less(i, j int) bool {
-	return is.data[i].data[1] < is.data[j].data[1]
-}
-
-func (is *Items) Append(i Item) {
-	is.data = append(is.data, i)
-}
-
-func (is *Items) Get(i int) *Item {
-	return &(is.data[i])
+	return is[i].data[1] < is[j].data[1]
 }
 
 func main() {
@@ -55,11 +45,10 @@ func main() {
 		fields := strings.Split(line, " ")
 		item.data[0], _ = strconv.Atoi(fields[0])
 		item.data[1], _ = strconv.Atoi(fields[1])
-		is.Append(item)
+		is = append(is, item)
 		line, err = stream.ReadString('\n')
 	}
 
-	fmt.Println(is.Len())
 	sort.Sort(is)
 	return
 }
