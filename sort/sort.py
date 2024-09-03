@@ -6,7 +6,11 @@
 '''
 import sys
 
-with open(sys.argv[1]) as fi:
-    l = sorted(
-        (map(int, line.strip().split()) for line in fi),
-        key=lambda x: x[1])
+def main():
+    with open(sys.argv[1]) as fi:
+        l = [tuple(map(int, line.strip().split())) for line in fi]
+    l = sorted(l, key=lambda x: x[1])
+
+
+if __name__ == '__main__':
+    main()
